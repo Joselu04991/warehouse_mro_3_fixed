@@ -1,20 +1,21 @@
-# Usa Python oficial
+# Usa Python 3.11
 FROM python:3.11-slim
 
-# Crear carpeta
+# Crea directorio
 WORKDIR /app
 
-# Copiar requerimientos
+# Copia requirements
 COPY requirements.txt .
 
-# Instalar dependencias
+# Instala dependencias
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar todo el proyecto
+# Copia todo el proyecto
 COPY . .
 
-# Exponer puerto (obligatorio para Koyeb)
+# EXPONE el puerto que Railway define
+ENV PORT=8080
 EXPOSE 8080
 
-# Ejecutar la app con Gunicorn
-CMD ["gunicorn", "-b", "0.0.0.0:8080", "app:app"]
+# Comando de inicio (usa $PORT correctamente)
+CMD gunicorn --bind 0.0.0.0:$PORT wsgi:app
